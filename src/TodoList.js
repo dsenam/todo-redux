@@ -1,0 +1,39 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import * as TodoActions from "./store/actions/todos";
+import { bindActionCreators } from "redux";
+
+const TodoList = ({ todos, addTodo, removeTodo }) => (
+  <>
+    <ul>
+      {todos.map(todo => (
+        <li key={todo.id}>
+          {todo.text}{" "}
+          <button onClick={() => removeTodo(todo.id)}>Remover</button>
+        </li>
+      ))}
+    </ul>
+    <button onClick={() => addTodo("NOVO")}>Adicionar</button>
+  </>
+);
+
+TodoList.propTypes = {
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      text: PropTypes.string
+    }).isRequired
+  )
+};
+
+//Função para mapear o state da aplicação e passar para o REDUCER
+const mapStateToProps = state => ({
+  todos: state.todos
+});
+
+//Função bind Creators que adicion DISPATCH para todas as actions
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(TodoActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
